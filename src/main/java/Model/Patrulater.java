@@ -179,6 +179,24 @@ public class Patrulater extends FiguraGeometrica{
        return null;
     }
 
+    public Punct punctMathot(){
+        if(razaCerculuiInscris() != 0) {
+            Punct centruCercInscris = cercInscris().getCentru();
+            float d1 = p1.distanta(centruCercInscris);
+            float d2 = p2.distanta(centruCercInscris);
+            float d3 = p3.distanta(centruCercInscris);
+            float d4 = p4.distanta(centruCercInscris);
+
+            int sum = (int) (d1 + d2 + d3 + d4);
+            int xm = (int) ((d1 * p1.getX() + d2 * p2.getX() + d3 * p3.getX() + d4 * p3.getX()) / sum);
+            int ym = (int) ((d1 * p1.getY() + d2 * p2.getY() + d3 * p3.getY() + d4 * p4.getY()) / sum);
+
+            return new Punct(xm, ym);
+        }
+
+        return null;
+    }
+
     public ArrayList<Dreapta> diagonale(){
         ArrayList<Dreapta> drepte = new ArrayList<>();
         drepte.add(new Dreapta(p1, p3));

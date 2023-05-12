@@ -4,6 +4,7 @@ import Model.Cerc;
 import Model.Dao.UserDAO;
 import Model.Dreapta;
 import Model.Patrulater;
+import Model.Punct;
 import View.GuestView;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.security.AnyTypePermission;
@@ -146,10 +147,10 @@ public class GuestController implements Observer{
 
             //Bisectoare
             drepte = patrulater.bisectoare();
-//            guestView.getG().drawLine(drepte.get(0).getPunct1().getX(), drepte.get(0).getPunct1().getY(), drepte.get(0).getPunct2().getX(), drepte.get(0).getPunct2().getY());
-//            guestView.getG().drawLine(drepte.get(1).getPunct1().getX(), drepte.get(1).getPunct1().getY(), drepte.get(1).getPunct2().getX(), drepte.get(1).getPunct2().getY());
-//            guestView.getG().drawLine(drepte.get(2).getPunct1().getX(), drepte.get(2).getPunct1().getY(), drepte.get(2).getPunct2().getX(), drepte.get(2).getPunct2().getY());
-//            guestView.getG().drawLine(drepte.get(3).getPunct1().getX(), drepte.get(3).getPunct1().getY(), drepte.get(3).getPunct2().getX(), drepte.get(3).getPunct2().getY());
+            guestView.getG().drawLine(drepte.get(0).getPunct1().getX(), drepte.get(0).getPunct1().getY(), drepte.get(0).getPunct2().getX(), drepte.get(0).getPunct2().getY());
+            guestView.getG().drawLine(drepte.get(1).getPunct1().getX(), drepte.get(1).getPunct1().getY(), drepte.get(1).getPunct2().getX(), drepte.get(1).getPunct2().getY());
+            guestView.getG().drawLine(drepte.get(2).getPunct1().getX(), drepte.get(2).getPunct1().getY(), drepte.get(2).getPunct2().getX(), drepte.get(2).getPunct2().getY());
+            guestView.getG().drawLine(drepte.get(3).getPunct1().getX(), drepte.get(3).getPunct1().getY(), drepte.get(3).getPunct2().getX(), drepte.get(3).getPunct2().getY());
 
             //Dreapta Gauss
             drepte = patrulater.dreaptaGauss();
@@ -162,11 +163,27 @@ public class GuestController implements Observer{
             guestView.getG().drawLine(drepte.get(1).getPunct1().getX(), drepte.get(1).getPunct1().getY(), drepte.get(1).getPunct2().getX(), drepte.get(1).getPunct2().getY());
             guestView.getG().drawLine(drepte.get(2).getPunct1().getX(), drepte.get(2).getPunct1().getY(), drepte.get(2).getPunct2().getX(), drepte.get(2).getPunct2().getY());
 
-
             //Dreapta Aubert
             Dreapta dreapta = patrulater.dreaptaAubert();
             guestView.getG().setColor(Color.MAGENTA);
             guestView.getG().drawLine(dreapta.getPunct1().getX(), dreapta.getPunct1().getY(), dreapta.getPunct2().getX(), dreapta.getPunct2().getY());
+
+            //Punct Miguel
+            Punct punctMiguel = patrulater.punctulMiquel();
+            if(punctMiguel != null)
+                guestView.getG().fillRect(punctMiguel.getX()-3, punctMiguel.getY()-3, 6, 6);
+
+            //Punct Newton
+            Punct punctNewton= patrulater.punctulLuiNewton();
+            if(punctNewton != null)
+                guestView.getG().fillRect(punctNewton.getX()-3, punctNewton.getY()-3, 6, 6);
+
+            //Punct Mathot
+            Punct punctMathot = patrulater.punctMathot();
+            if(punctMathot != null){
+                guestView.getG().fillRect(punctMathot.getX()-3, punctMathot.getY()-3, 6, 6);
+
+            }
 
         });
 

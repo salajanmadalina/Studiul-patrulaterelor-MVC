@@ -29,7 +29,7 @@ public class AdminController implements Observer {
             String role = String.valueOf(adminView.getRolField().getText());
 
             ArrayList<User> users = (ArrayList<User>)userDAO.findAll();
-            int id = users.size() + 2;
+            int id = users.size() + 1;
 
             if(!username.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
                 User user = new User(username, password, role, id);
