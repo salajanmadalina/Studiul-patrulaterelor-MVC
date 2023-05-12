@@ -12,7 +12,7 @@ public class LogInController implements Observer{
 
     public LogInController(int index) {
         this.logInView = new LogInView();
-        this.language = new Language();
+        this.language = Language.getInstance();
         language.attachObserver(this);
         language.setCurrentLanguage(index);
         addActionListeners();

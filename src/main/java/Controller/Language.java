@@ -21,14 +21,21 @@ public class Language {
         }
     };
     private ResourceBundle rb = ResourceBundle.getBundle("MyResources", locale);
+    private static Language singleton = null;
 
-    public Language(){
-
+    private Language(){
     }
 
-    public Language(int language){
+    private Language(int language){
         rb = ResourceBundle.getBundle("MyResources", locales.get(language));
         notifyObservers();
+    }
+
+    public static Language getInstance(){
+        if(singleton == null){
+            singleton = new Language(0);
+        }
+        return singleton;
     }
 
     public int getLanguage(){

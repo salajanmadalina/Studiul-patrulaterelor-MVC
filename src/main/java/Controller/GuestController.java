@@ -28,7 +28,7 @@ public class GuestController implements Observer{
         this.language = language;
         this.patrulater = new Patrulater();
         this.language.attachObserver(this);
-        language.setCurrentLanguage(index);
+        this.language.setCurrentLanguage(index);
         addActionListeners();
     }
 

@@ -29,7 +29,7 @@ public class UserController implements Observer{
         this.testDAO = new TestDAO();
         this.language = language;
         this.language.attachObserver(this);
-        language.setCurrentLanguage(index);
+        this.language.setCurrentLanguage(index);
         addActionListeners();
     }
 

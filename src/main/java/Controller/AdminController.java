@@ -17,7 +17,7 @@ public class AdminController implements Observer {
         this.adminView = new AdminView();
         this.language = language;
         this.language.attachObserver(this);
-        language.setCurrentLanguage(index);
+        this.language.setCurrentLanguage(index);
         this.userDAO =  new UserDAO();
         addActionListeners();
     }
