@@ -1,14 +1,15 @@
 package Controller;
 
-import Model.Dao.UserDAO;
-import Model.User;
+import Commands.AddUserCommand;
+import Commands.Command;
+import Commands.LoginCommand;
 import View.LogInView;
-import java.util.ArrayList;
 
 public class LogInController implements Observer{
     private LogInView logInView;
     private Language language;
-    private UserDAO userDAO;
+    private Command loginCommand;
+    private Command addUserCommand;
 
     public LogInController(int index) {
         this.logInView = new LogInView();
@@ -20,14 +21,23 @@ public class LogInController implements Observer{
 
     private void addActionListeners(){
         logInView.getLogIn().addActionListener(actionListener -> {
-            String userName = String.valueOf(logInView.getNameField().getText());
+            String username = String.valueOf(logInView.getNameField().getText());
             String password = String.valueOf(logInView.getPasswordField().getPassword());
 
-            userDAO =  new UserDAO();
-            ArrayList<User> users = (ArrayList<User>)userDAO.findAll();
-            User user = getRegisteredUser(users, userName, password);
-            if( user!= null){
-                showUserInterface(user);
+            loginCommand = new LoginCommand(username, password);
+            loginCommand.execute();
+
+            if(loginCommand instanceof LoginCommand){
+                String isAuthentificated = ((LoginCommand) loginCommand).getIsAuthenticated();
+
+                if(isAuthentificated.equals("ADMIN")){
+                    new AdminController(language, language.getLanguage());
+                    logInView.getFrame().dispose();
+                }
+                else if(isAuthentificated.equals("ELEV")){
+                    new UserController(language, language.getLanguage());
+                    logInView.getFrame().dispose();
+                }
             }
 
         });
@@ -38,14 +48,16 @@ public class LogInController implements Observer{
         });
 
         logInView.getBtnRegister().addActionListener(actionListener -> {
-            String userName = String.valueOf(logInView.getNameField().getText());
+            String username = String.valueOf(logInView.getNameField().getText());
             String password = String.valueOf(logInView.getPasswordField().getPassword());
+            String role = "ELEV";
 
-            userDAO =  new UserDAO();
-            int id = userDAO.findAll().size() + 2;
-            if(!userName.isEmpty() && !password.isEmpty()) {
-                User user = new User(userName, password, "ELEV", id);
-                userDAO.insert(user);
+            addUserCommand= new AddUserCommand(username,password,role);
+            addUserCommand.execute();
+
+            if(addUserCommand instanceof AddUserCommand){
+                String response = ((AddUserCommand) addUserCommand).getResponse();
+                logInView.showMessage(response);
             }
         });
 
@@ -63,28 +75,6 @@ public class LogInController implements Observer{
         logInView.getBtnRegister().setText(language.getRb().getString("register"));
         logInView.getLblStudiulPatrulaterelor().setText(language.getRb().getString("titleLogIn"));
 
-    }
-
-    private User getRegisteredUser( ArrayList<User> users, String userName, String password){
-        for(User user: users){
-            if(user.getNume().equals(userName) && user.getPassword().equals(password)){
-                return user;
-            }
-        }
-        return null;
-    }
-
-    private void showUserInterface(User user){
-        switch (user.getRol()){
-            case "ADMIN":
-                new AdminController(language, language.getLanguage());
-                logInView.getFrame().dispose();
-                break;
-            case "ELEV":
-                new UserController(language, language.getLanguage(), user.getId());
-                logInView.getFrame().dispose();
-                break;
-        }
     }
 
 }

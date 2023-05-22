@@ -1,24 +1,22 @@
 package Controller;
 
-import Model.Dao.UserDAO;
-import Model.User;
+import Commands.*;
 import View.AdminView;
-
-import java.util.ArrayList;
-
 
 public class AdminController implements Observer {
 
     private AdminView adminView;
-    private UserDAO userDAO;
     private Language language;
+    private Command deleteUserCommand;
+    private Command updateUserCommand;
+    private Command addUserCommand;
+    private Command allUsersCommand;
 
     public AdminController(Language language, int index) {
         this.adminView = new AdminView();
         this.language = language;
         this.language.attachObserver(this);
         this.language.setCurrentLanguage(index);
-        this.userDAO =  new UserDAO();
         addActionListeners();
     }
 
@@ -28,22 +26,20 @@ public class AdminController implements Observer {
             String password = String.valueOf(adminView.getPasswordField().getPassword());
             String role = String.valueOf(adminView.getRolField().getText());
 
-            ArrayList<User> users = (ArrayList<User>)userDAO.findAll();
-            int id = users.size() + 1;
+            addUserCommand= new AddUserCommand(username,password,role);
+            addUserCommand.execute();
 
-            if(!username.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
-                User user = new User(username, password, role, id);
-                userDAO.insert(user);
+            if(addUserCommand instanceof AddUserCommand){
+                String response = ((AddUserCommand) addUserCommand).getResponse();
+                adminView.showMessage(response);
             }
         });
 
         adminView.getBtnVizualizeazaListaUseri().addActionListener(actionListener -> {
-            ArrayList<User> users = (ArrayList<User>)userDAO.findAll();
-            String info = "";
+            allUsersCommand = new AllUsersCommand();
+            allUsersCommand.execute();
 
-            for(User u: users){
-                info += u.toString();
-            }
+            String info = ((AllUsersCommand)allUsersCommand).getAllUsers();
 
             adminView.setTextArea(info);
         });
@@ -56,13 +52,11 @@ public class AdminController implements Observer {
 
         adminView.getBtnDelete().addActionListener(action -> {
             int id = Integer.parseInt(adminView.getIdField().getText());
-            User user =  userDAO.findById(id);
-
-            if(user != null){
-                userDAO.delete(id);
-            }
-            else{
-                adminView.showMessage("The user with this id doesn't exist!");
+            deleteUserCommand = new DeleteUserCommand(id);
+            deleteUserCommand.execute();
+            if(deleteUserCommand instanceof DeleteUserCommand){
+                String response = ((DeleteUserCommand) deleteUserCommand).getResponse();
+                adminView.showMessage(response);
             }
         });
 
@@ -72,15 +66,13 @@ public class AdminController implements Observer {
             String role = String.valueOf(adminView.getRolField().getText());
             int id = Integer.parseInt(adminView.getIdField().getText());
 
-            if(!username.isEmpty()){
-                userDAO.update("nume", username, id);
+            updateUserCommand = new UpdateUserCommand(id,username,password,role);
+            updateUserCommand.execute();
+            if (updateUserCommand instanceof UpdateUserCommand) {
+                String response = ((UpdateUserCommand)updateUserCommand).getResponse();
+                adminView.showMessage(response);
             }
-            if(!password.isEmpty()){
-                userDAO.update("password", password, id);
-            }
-            if(!role.isEmpty()){
-                userDAO.update("rol", role, id);
-            }
+
         });
 
         adminView.getLanguageComboBox().addActionListener(actionListener -> {
